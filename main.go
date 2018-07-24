@@ -1,154 +1,78 @@
 package main
 
 import (
-	"text/template"
+	"html/template"
 	"os"
 	"log"
 )
 
-var tpl *template.Template
+func parseBasic (fname string ){
+	var tpl *template.Template = template.Must(template.ParseFiles(fname))
 
-type sage struct {
+	xs :=[] string {"zero", "one", "two", "three", "four", "five",}
+
+	err := tpl.Execute(os.Stdout, xs)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+func parseIf (fname string ){
+	var tpl *template.Template = template.Must(template.ParseFiles(fname))
+
+	u1 := user{
+		Name:  "Buddha",
+		Motto: "The belief of no beliefs",
+		Admin: false,
+	}
+
+	u2 := user{
+		Name:  "Gandhi",
+		Motto: "Be the change",
+		Admin: true,
+	}
+
+	u3 := user{
+		Name:  "",
+		Motto: "Nobody",
+		Admin: true,
+	}
+
+	users := []user{u1, u2, u3}
+
+	err := tpl.Execute(os.Stdout, users)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+func parseCompare (fname string ) {
+	var tpl *template.Template = template.Must(template.ParseFiles(fname))
+
+	g1 := struct {
+		Score1 int
+		Score2 int
+	}{
+		7,
+		9,
+	}
+
+	err := tpl.Execute(os.Stdout, g1)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+type user struct {
 	Name  string
 	Motto string
+	Admin bool
 }
-
-
-type car struct {
-	Manufacturer string
-	Model        string
-	Doors        int
-}
-
-
-func parseNormal (fileName string) {
-
-	tpl = template.Must(template.ParseFiles(fileName))
-	err := tpl.ExecuteTemplate(os.Stdout, "wisdom.gohtml", `Release self-focus; embrace other-focus.`)
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
-
-
-func parseRange (fileName string) {
-
-	tpl = template.Must(template.ParseFiles(fileName))
-	sages := []string{"Gandhi", "MLK", "Buddha", "Jesus", "Muhammad"}
-
-	err := tpl.Execute(os.Stdout, sages)
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
-func parseStruct (fileName string) {
-
-	tpl = template.Must(template.ParseFiles(fileName))
-	buddha := sage{
-		Name:  "Buddha",
-		Motto: "The belief of no beliefs",
-	}
-
-	err := tpl.Execute(os.Stdout, buddha)
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
-
-func parseSliceStruct (fileName string) {
-
-	tpl = template.Must(template.ParseFiles(fileName))
-
-	buddha := sage{
-		Name:  "Buddha",
-		Motto: "The belief of no beliefs",
-	}
-
-	gandhi := sage{
-		Name:  "Gandhi",
-		Motto: "Be the change",
-	}
-
-	mlk := sage{
-		Name:  "Martin Luther King",
-		Motto: "Hatred never ceases with hatred but with love alone is healed.",
-	}
-
-	jesus := sage{
-		Name:  "Jesus",
-		Motto: "Love all",
-	}
-
-	muhammad := sage{
-		Name:  "Muhammad",
-		Motto: "To overcome evil with good is good, to resist evil by evil is evil.",
-	}
-
-	sages := []sage{buddha, gandhi, mlk, jesus, muhammad}
-
-	err := tpl.Execute(os.Stdout, sages)
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
-
-func parseStructSliceStruct (fileName string) {
-
-	tpl = template.Must(template.ParseFiles(fileName))
-
-	b := sage{
-		Name:  "Buddha",
-		Motto: "The belief of no beliefs",
-	}
-
-	g := sage{
-		Name:  "Gandhi",
-		Motto: "Be the change",
-	}
-
-	m := sage{
-		Name:  "Martin Luther King",
-		Motto: "Hatred never ceases with hatred but with love alone is healed.",
-	}
-
-	f := car{
-		Manufacturer: "Ford",
-		Model:        "F150",
-		Doors:        2,
-	}
-
-	c := car{
-		Manufacturer: "Toyota",
-		Model:        "Corolla",
-		Doors:        4,
-	}
-
-	sages := []sage{b, g, m}
-	cars := []car{f, c}
-
-	data := struct {
-		Wisdom    []sage
-		Transport []car
-	}{
-		sages,
-		cars,
-	}
-
-	err := tpl.Execute(os.Stdout, data)
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
 
 func main() {
-	//parseRange("./res/parseRange.gohtml")
-	//parseNormal("./res/wisdom.gohtml")
-	//parseStruct("./res/parseStruct.gohtml")
-	//parseSliceStruct("./res/parseSliceStruct.gohtml")
-	parseStructSliceStruct("./res/structSliceStruct.gohtml")
+
+	//parseBasic("./res/global_functions/basic.gohtml")
+	//parseIf("./res/global_functions/if.gohtml")
+	//parseCompare("./res/global_functions/compare.gohtml")
+
 }
